@@ -5,9 +5,10 @@ from .models import MovieProxy, TVShowProxy, TVShowSeasonProxy, Playlist, Playli
 
 # Register your models here.
 
+
 class MovieProxyAdmin(admin.ModelAdmin):
-    list_display = ['title']
-    fields = ['title', 'state', 'video']
+    list_display = ["title"]
+    fields = ["title", "state", "category", "video"]
 
     class Meta:
         model = MovieProxy
@@ -26,7 +27,7 @@ class SeasonEpisodeInline(admin.TabularInline):
 
 class TVShowSeasonProxyAdmin(admin.ModelAdmin):
     inlines = [SeasonEpisodeInline]
-    list_display = ['title', 'parent']
+    list_display = ["title", "parent"]
 
     class Meta:
         model = TVShowSeasonProxy
@@ -39,15 +40,15 @@ admin.site.register(TVShowSeasonProxy, TVShowSeasonProxyAdmin)
 
 
 class TVShowSeasonProxyInline(admin.TabularInline):
-    fields = ['title', 'state', 'video']
+    fields = ["title", "state", "video"]
     model = TVShowSeasonProxy
     # extra = 0
 
 
 class TVShowProxyAdmin(admin.ModelAdmin):
     inlines = [TVShowSeasonProxyInline]
-    list_display = ['title']
-    fields = ['order', 'title', 'state']
+    list_display = ["title"]
+    fields = ["order", "title", "category", "state"]
 
     class Meta:
         model = Playlist
@@ -66,7 +67,7 @@ class PlaylistItemInline(admin.TabularInline):
 
 class PlaylistAdmin(admin.ModelAdmin):
     inlines = [PlaylistItemInline]
-    fields = ['title', 'description', 'state', 'video']
+    fields = ["title", "description", "category", "state", "video"]
 
     class Meta:
         model = Playlist

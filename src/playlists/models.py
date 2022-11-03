@@ -4,6 +4,7 @@ from django.db.models import Avg, Max, Min, Q
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
+from categories.models import Category
 from videos.models import Video
 
 
@@ -38,6 +39,7 @@ class Playlist(models.Model):
         DRAFT = "DR", "Draft"
 
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=220)
     type = models.CharField(
