@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from categories.models import Category
 from videos.models import Video
+from tags.models import TaggedItem
 
 
 # Create your models here.
@@ -70,6 +71,7 @@ class Playlist(models.Model):
     publish_timestamp = models.DateTimeField(
         auto_now_add=False, auto_now=False, blank=True, null=True
     )
+    tags = GenericRelation(TaggedItem, related_query_name='playlist')
 
     objects = PlaylistManager()
 

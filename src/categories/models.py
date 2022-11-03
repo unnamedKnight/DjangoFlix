@@ -1,4 +1,6 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from tags.models import TaggedItem
 
 
 # Create your models here.
@@ -9,6 +11,7 @@ class Category(models.Model):
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    tags = GenericRelation(TaggedItem, related_query_name='category')
 
     class Meta:
         verbose_name = 'Category'
