@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # project apps
     'videos.apps.VideosConfig',
     'playlists.apps.PlaylistsConfig',
+    'categories.apps.CategoriesConfig',
 ]
 
 MIDDLEWARE = [

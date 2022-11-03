@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import VideoAllProxy, VideoPublishedProxy
+from .models import VideoAllProxy, VideoPublishedProxy, Video
 
 
 class VideoAllAdmin(admin.ModelAdmin):

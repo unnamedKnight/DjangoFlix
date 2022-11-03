@@ -1,4 +1,5 @@
 from django.contrib import admin
+from videos.models import Video
 from .models import MovieProxy, TVShowProxy, TVShowSeasonProxy, Playlist, PlaylistItem
 
 
@@ -6,7 +7,7 @@ from .models import MovieProxy, TVShowProxy, TVShowSeasonProxy, Playlist, Playli
 
 class MovieProxyAdmin(admin.ModelAdmin):
     list_display = ['title']
-    fields = ['title', 'description', 'state', 'video']
+    fields = ['title', 'state', 'video']
 
     class Meta:
         model = MovieProxy
@@ -38,6 +39,7 @@ admin.site.register(TVShowSeasonProxy, TVShowSeasonProxyAdmin)
 
 
 class TVShowSeasonProxyInline(admin.TabularInline):
+    fields = ['title', 'state', 'video']
     model = TVShowSeasonProxy
     # extra = 0
 
