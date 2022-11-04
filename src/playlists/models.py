@@ -28,6 +28,9 @@ class PlaylistManager(models.Manager):
     def published(self):
         return self.get_queryset().published()
 
+    def featured_playlists(self):
+        return self.get_queryset().filter(type=Playlist.PlaylistTypeChoices.PLAYLIST)
+
 
 class Playlist(models.Model):
     class PlaylistTypeChoices(models.TextChoices):
@@ -136,6 +139,13 @@ class TVShowProxy(Playlist):
         self.type = Playlist.PlaylistTypeChoices.SHOW
         super().save(*args, **kwargs)
 
+    @property
+    def seasons(self):
+        return self.playlist_set.published()
+
+    def get_short_display(self):
+        return f"{self.seasons.count()} Seasons"
+
 
 class TVShowSeasonProxyManager(PlaylistManager):
     def all(self):
@@ -173,4 +183,11 @@ def publish_state_pre_save(sender, instance, *args, **kwargs):
         instance.publish_timestamp = None
 
 
+pre_save.connect(publish_state_pre_save, sender=TVShowProxy)
+
+pre_save.connect(publish_state_pre_save, sender=TVShowSeasonProxy)
+
+pre_save.connect(publish_state_pre_save, sender=MovieProxy)
+
 pre_save.connect(publish_state_pre_save, sender=Playlist)
+
