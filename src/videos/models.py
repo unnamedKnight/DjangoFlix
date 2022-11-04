@@ -39,10 +39,26 @@ class Video(models.Model):
 
     objects = VideoManager()
 
+    def get_video_id(self):
+
+        # if not self.is_published:
+        #     return None
+        # return self.video_id
+        #  # alternative of the above operations
+        return self.id if self.is_published else None
+
     @property
     def is_published(self):
-        return self.active
-
+        if not self.active:
+            return False
+        state = self.state
+        if state != Video.PublishStateOptions.PUBLISH:
+            return False
+        publish_timestamp = self.publish_timestamp
+        if publish_timestamp is None:
+            return False
+        now = timezone.now()
+        return publish_timestamp <= now
     # def get_playlist_ids(self):
     #     # self.<foreigned_obj>_set.all()
     #     return list(self.playlist_featured.all().values_list('id', flat=True))

@@ -13,7 +13,7 @@ urlpatterns = [
         name="tv_show_detail",
     ),
     path(
-        "tv-shows-detail/<int:showPk>/season/<int:seasonPk>",
+        "tv-shows-detail/<int:showPk>/season/<int:pk>",
         views.TVShowSeasonDetailView.as_view(),
         name="tv_show_season_detail",
     ),

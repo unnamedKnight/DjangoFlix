@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from django.http import Http404
 
 from .models import Playlist, MovieProxy, TVShowProxy, TVShowSeasonProxy
 
@@ -74,16 +75,28 @@ class TVShowDetailView(PlaylistMixin, DetailView):
 
 
 class TVShowSeasonDetailView(PlaylistMixin, DetailView):
+
+    # when using complex url like
+    # tv-shows-detail/<int:showPk>/season/<int:pk>
+    # where 2 primary keys are used  we dont need to get the primary key through kwargs
+    # if using pk as the identifier of primary key
+    # here in the above example of URL the first primary key will be ignored by django
+    # and django will return the object based on the last primary key
     template_name = 'playlists/season_detail.html'
     queryset = TVShowSeasonProxy.objects.all()
     title = "TVShow Season Details"
 
-    def get_object(self):
-        request = self.request
-        kwargs = self.kwargs
-        parent_pk = kwargs.get('showPk')
-        season_pk = kwargs.get('seasonPk')
-        qs = self.get_queryset().filter(parent__id=parent_pk, id=season_pk)
-        if not qs.count() == 1:
-            raise Exception('Not Found')
-        return qs.first()
+    # def get_object(self):
+    #     request = self.request
+    #     kwargs = self.kwargs
+
+    #     parent_pk = kwargs.get('showPk')
+    #    # when using primary key name other than pk
+    #    # we have to get that pk through kwargs
+    #     season_pk = kwargs.get('seasonPk')
+    #     try:
+    #         query_object = self.get_queryset().get(parent__id=parent_pk, id=season_pk)
+    #     except TVShowSeasonProxy.DoesNotExist:
+    #         raise Http404
+    #
+    #     return query_object

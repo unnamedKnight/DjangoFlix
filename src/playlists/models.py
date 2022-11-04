@@ -44,7 +44,9 @@ class Playlist(models.Model):
         DRAFT = "DR", "Draft"
 
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        Category, blank=True, null=True, on_delete=models.SET_NULL
+    )
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=220)
     type = models.CharField(
@@ -75,8 +77,8 @@ class Playlist(models.Model):
     publish_timestamp = models.DateTimeField(
         auto_now_add=False, auto_now=False, blank=True, null=True
     )
-    tags = GenericRelation(TaggedItem, related_query_name='playlist')
-    ratings = GenericRelation(Rating, related_query_name='playlist')
+    tags = GenericRelation(TaggedItem, related_query_name="playlist")
+    ratings = GenericRelation(Rating, related_query_name="playlist")
 
     objects = PlaylistManager()
 
@@ -89,7 +91,27 @@ class Playlist(models.Model):
         # return Playlist.objects.filter(id=self.id).aggregate(Avg("ratings_set__value"))
 
     def get_rating_spread(self):
-        return Playlist.objects.filter(id=self.id).aggregate(max=Max("ratings__value"), min=Min("ratings__value"))
+        return Playlist.objects.filter(id=self.id).aggregate(
+            max=Max("ratings__value"), min=Min("ratings__value")
+        )
+
+    def get_short_display(self):
+        return ""
+
+    def get_video_id(self):
+        """
+        get main video id to render video for users
+        """
+        # if self.video is None:
+        #     return None
+        # another implementation of above operations
+        return self.video.get_video_id() if self.video else None
+
+    def get_clips(self):
+        """
+        get clips to render clips for users
+        """
+        return self.playlistitem_set.all().published()
 
     @property
     def is_published(self):
@@ -104,15 +126,15 @@ class MovieProxyManager(PlaylistManager):
 class MovieProxy(Playlist):
     objects = MovieProxyManager()
 
-    # def get_movie_id(self):
-    #     """
-    #     get movie id to render movie for users
-    #     """
-    #     return self.get_video_id()
+    def get_movie_id(self):
+        """
+        get movie id to render movie for users
+        """
+        return self.get_video_id()
 
     class Meta:
-        verbose_name = 'Movie'
-        verbose_name_plural = 'Movies'
+        verbose_name = "Movie"
+        verbose_name_plural = "Movies"
         proxy = True
 
     def save(self, *args, **kwargs):
@@ -166,6 +188,39 @@ class TVShowSeasonProxy(Playlist):
         self.type = Playlist.PlaylistTypeChoices.SEASON
         super().save(*args, **kwargs)
 
+    def get_season_trailer(self):
+        """
+        get episodes to render for users
+        """
+        return self.get_video_id()
+
+    def get_episodes(self):
+        """
+        get episodes to render for users
+        """
+        # qs = self.playlistitem_set.all().published()
+        # print(qs)
+        return self.playlistitem_set.all().published()
+
+
+class PlaylistItemQuerySet(models.QuerySet):
+    def published(self):
+        now = timezone.now()
+        return self.filter(
+            playlist__state=Playlist.PublishStateOptions.PUBLISH,
+            playlist__publish_timestamp__lte=now,
+            video__state=Video.PublishStateOptions.PUBLISH,
+            video__publish_timestamp__lte=now,
+        )
+
+
+class PlaylistItemManager(models.Manager):
+    def get_queryset(self):
+        return PlaylistItemQuerySet(self.model, using=self._db)
+
+    def published(self):
+        return self.get_queryset().published()
+
 
 class PlaylistItem(models.Model):
     playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
@@ -190,4 +245,3 @@ pre_save.connect(publish_state_pre_save, sender=TVShowSeasonProxy)
 pre_save.connect(publish_state_pre_save, sender=MovieProxy)
 
 pre_save.connect(publish_state_pre_save, sender=Playlist)
-
