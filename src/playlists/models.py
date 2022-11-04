@@ -7,6 +7,7 @@ from django.utils import timezone
 from categories.models import Category
 from videos.models import Video
 from tags.models import TaggedItem
+from ratings.models import Rating
 
 
 # Create your models here.
@@ -72,15 +73,24 @@ class Playlist(models.Model):
         auto_now_add=False, auto_now=False, blank=True, null=True
     )
     tags = GenericRelation(TaggedItem, related_query_name='playlist')
+    ratings = GenericRelation(Rating, related_query_name='playlist')
 
     objects = PlaylistManager()
+
+    def __str__(self):
+        return self.title
+
+    def get_rating_avg(self):
+        return Playlist.objects.filter(id=self.id).aggregate(Avg("ratings__value"))
+        # if it was one to many relationship then the following expression would be
+        # return Playlist.objects.filter(id=self.id).aggregate(Avg("ratings_set__value"))
+
+    def get_rating_spread(self):
+        return Playlist.objects.filter(id=self.id).aggregate(max=Max("ratings__value"), min=Min("ratings__value"))
 
     @property
     def is_published(self):
         return self.active
-
-    def __str__(self):
-        return self.title
 
 
 class MovieProxyManager(PlaylistManager):

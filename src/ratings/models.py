@@ -8,14 +8,14 @@ User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
+
 class RatingChoices(models.IntegerChoices):
     ONE = 1
     TWO = 2
     THREE = 3
     FOUR = 4
     FIVE = 5
-
-    __empty__ = 'Unknown'
+    __empty__ = "Unknown"
 
 
 class Rating(models.Model):
@@ -23,4 +23,4 @@ class Rating(models.Model):
     value = models.IntegerField(null=True, blank=True, choices=RatingChoices.choices)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")

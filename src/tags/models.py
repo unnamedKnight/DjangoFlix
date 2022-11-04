@@ -14,5 +14,3 @@ class TaggedItem(models.Model):
     # def get_related_object(self):
     #     model_class = self.content_type.model_class()
     #     return model_class.objects.get(id=self.object_id)
-
-
