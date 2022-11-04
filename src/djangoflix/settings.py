@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'playlists.apps.PlaylistsConfig',
     'categories.apps.CategoriesConfig',
     'tags.apps.TagsConfig',
+    'ratings.apps.RatingsConfig',
 ]
 
 MIDDLEWARE = [
