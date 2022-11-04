@@ -21,6 +21,7 @@
 <div>
     <h3>{{ instance.title }} </h3>
     <p>{{ instance.description }}</p>
+    <p> {{ instance.id }}</p>
     {% if instance.is_movie %}
     {% include 'playlists/cards/movie.html' with movie=instance %}
     {% elif instance.is_show %}

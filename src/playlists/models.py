@@ -43,7 +43,7 @@ class Playlist(models.Model):
         PUBLISH = "PU", "Publish"
         DRAFT = "DR", "Draft"
 
-    parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=220)
