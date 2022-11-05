@@ -418,3 +418,4 @@ $RECYCLE.BIN/
 test
 .idea
 pipfile.lock
+.vscode
