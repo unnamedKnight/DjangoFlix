@@ -47,6 +47,9 @@ class Playlist(models.Model):
     category = models.ForeignKey(
         Category, blank=True, null=True, on_delete=models.SET_NULL
     )
+    related = models.ManyToManyField(
+        "self", blank=True, related_name="related", through="PlaylistRelated"
+    )
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=220)
     type = models.CharField(
@@ -167,7 +170,6 @@ class TVShowProxy(Playlist):
 
     def get_short_display(self):
         return f"{self.seasons.count()} Seasons"
-    
 
 
 class TVShowSeasonProxyManager(PlaylistManager):
@@ -202,7 +204,6 @@ class TVShowSeasonProxy(Playlist):
         # qs = self.playlistitem_set.all().published()
         # print(qs)
         return self.playlistitem_set.all().published()
-        
 
 
 class PlaylistItemQuerySet(models.QuerySet):
@@ -229,7 +230,7 @@ class PlaylistItem(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     order = models.IntegerField(default=1)
     timestamp = models.DateTimeField(auto_now_add=True)
-    
+
     objects = PlaylistItemManager()
 
 
@@ -240,6 +241,24 @@ def publish_state_pre_save(sender, instance, *args, **kwargs):
         instance.publish_timestamp = timezone.now()
     elif is_draft:
         instance.publish_timestamp = None
+
+
+def pr_limit_choices_to():
+    return Q(type=Playlist.PlaylistTypeChoices.MOVIE) | Q(
+        type=Playlist.PlaylistTypeChoices.SHOW
+    )
+
+
+class PlaylistRelated(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
+    related = models.ForeignKey(
+        Playlist,
+        on_delete=models.CASCADE,
+        related_name="related_item",
+        limit_choices_to=pr_limit_choices_to,
+    )
+    order = models.IntegerField(default=1)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 
 pre_save.connect(publish_state_pre_save, sender=TVShowProxy)
