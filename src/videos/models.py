@@ -39,6 +39,9 @@ class Video(models.Model):
 
     objects = VideoManager()
 
+    def __str__(self):
+        return self.title
+
     def get_video_id(self):
 
         # if not self.is_published:
@@ -88,3 +91,5 @@ def publish_state_pre_save(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(publish_state_pre_save, sender=Video)
+pre_save.connect(publish_state_pre_save, sender=VideoAllProxy)
+pre_save.connect(publish_state_pre_save, sender=VideoPublishedProxy)

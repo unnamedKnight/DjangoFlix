@@ -16,7 +16,9 @@
 {% if title %}
 <h1>{{ title }}</h1>
 <h3> {{ object.title }}</h3>
-<h3> {{ object.id }}</h3>
+<!--<h3> {{ object.id }}</h3>-->
+
+{% include 'videos/embed.html' with video_id=object.get_movie_id %}
 {% endif %}
 
 

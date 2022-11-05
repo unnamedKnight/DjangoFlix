@@ -167,6 +167,7 @@ class TVShowProxy(Playlist):
 
     def get_short_display(self):
         return f"{self.seasons.count()} Seasons"
+    
 
 
 class TVShowSeasonProxyManager(PlaylistManager):
@@ -201,6 +202,7 @@ class TVShowSeasonProxy(Playlist):
         # qs = self.playlistitem_set.all().published()
         # print(qs)
         return self.playlistitem_set.all().published()
+        
 
 
 class PlaylistItemQuerySet(models.QuerySet):
@@ -227,6 +229,8 @@ class PlaylistItem(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     order = models.IntegerField(default=1)
     timestamp = models.DateTimeField(auto_now_add=True)
+    
+    objects = PlaylistItemManager()
 
 
 def publish_state_pre_save(sender, instance, *args, **kwargs):
