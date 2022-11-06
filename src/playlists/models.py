@@ -21,6 +21,12 @@ class PlaylistQuerySet(models.QuerySet):
             state=Playlist.PublishStateOptions.PUBLISH, publish_timestamp__lte=now
         )
 
+    def movie_or_show(self):
+        return self.filter(
+            Q(type=Playlist.PlaylistTypeChoices.MOVIE)
+            | Q(type=Playlist.PlaylistTypeChoices.SHOW)
+        )
+
 
 class PlaylistManager(models.Manager):
     def get_queryset(self):
@@ -102,7 +108,7 @@ class Playlist(models.Model):
 
         if self.is_season and self.parent is not None:
             return reverse(
-                "tv_show_season_detail", 
+                "tv_show_season_detail",
                 kwargs={"showPk": self.parent.id, "pk": self.id},
             )
 
