@@ -2,6 +2,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models import Avg, Max, Min, Q
 from django.db.models.signals import pre_save
+from django.urls import reverse
 from django.utils import timezone
 
 from categories.models import Category
@@ -66,6 +67,7 @@ class Playlist(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )  # one video per playlist
+
     videos = models.ManyToManyField(
         Video, related_name="playlist_item", blank=True, through="PlaylistItem"
     )
@@ -87,6 +89,36 @@ class Playlist(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_related_items(self):
+        return self.playlistrelated_set.all()
+
+    def get_absolute_url(self):
+        if self.is_movie:
+            return reverse("movie_detail", kwargs={"pk": self.id})
+
+        if self.is_show:
+            return reverse("tv_show_detail", kwargs={"pk": self.id})
+
+        if self.is_season and self.parent is not None:
+            return reverse(
+                "tv_show_season_detail", 
+                kwargs={"showPk": self.parent.id, "pk": self.id},
+            )
+
+        return reverse("media_detail", kwargs={"pk": self.id})
+
+    @property
+    def is_season(self):
+        return self.type == self.PlaylistTypeChoices.SEASON
+
+    @property
+    def is_movie(self):
+        return self.type == self.PlaylistTypeChoices.MOVIE
+
+    @property
+    def is_show(self):
+        return self.type == self.PlaylistTypeChoices.SHOW
 
     def get_rating_avg(self):
         return Playlist.objects.filter(id=self.id).aggregate(Avg("ratings__value"))

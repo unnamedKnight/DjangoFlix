@@ -18,9 +18,10 @@
 <h3> {{ object.title }}</h3>
 <h3> {{ object.id }}</h3>
 
-    {% for season in object.seasons %}
-        <li>{{ season.title }}</li>
-    {% endfor %}
+{% for season in object.seasons %}
+
+<li><a href='{{ season.get_absolute_url }}'>{{ season.title }} </a></li>
+{% endfor %}
 {% endif %}
 
 

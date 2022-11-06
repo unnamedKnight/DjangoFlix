@@ -8,7 +8,7 @@ from .models import Playlist, MovieProxy, TVShowProxy, TVShowSeasonProxy
 # Create your views here.
 
 class PlaylistMixin():
-    title = None
+    # title = None
     template_name = 'playlists/playlist.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -24,9 +24,9 @@ class PlaylistMixin():
 
 
 class FeaturedPlaylistListView(PlaylistMixin, ListView):
-    # template_name = 'playlists/featured_list.html'
+    template_name = 'playlists/featured_playlist.html'
     queryset = Playlist.objects.featured_playlists()
-    title = "Featured"
+    title = "Featured Playlist"
 
 
 class FeaturedPlaylistDetailView(PlaylistMixin, DetailView):
