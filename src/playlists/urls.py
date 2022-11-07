@@ -18,4 +18,5 @@ urlpatterns = [
         name="tv_show_season_detail",
     ),
     path("tv-shows", views.TVShowListView.as_view(), name="tv_shows"),
+    path("search/", views.SearchView.as_view(), name="search"),
 ]
