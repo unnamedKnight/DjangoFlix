@@ -1,6 +1,13 @@
 from django.contrib import admin
 from tags.admin import TaggedItemInline
-from .models import MovieProxy, TVShowProxy, TVShowSeasonProxy, Playlist, PlaylistItem, PlaylistRelated
+from .models import (
+    MovieProxy,
+    TVShowProxy,
+    TVShowSeasonProxy,
+    Playlist,
+    PlaylistItem,
+    PlaylistRelated,
+)
 
 
 # Register your models here.
@@ -63,7 +70,7 @@ admin.site.register(TVShowProxy, TVShowProxyAdmin)
 
 class PlaylistRelatedInline(admin.TabularInline):
     model = PlaylistRelated
-    fk_name = 'playlist'
+    fk_name = "playlist"
     extra = 0
 
 
