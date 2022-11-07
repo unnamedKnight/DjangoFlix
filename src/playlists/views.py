@@ -63,7 +63,7 @@ class FeaturedPlaylistDetailView(PlaylistMixin, DetailView):
 
 
 class MovieListView(PlaylistMixin, ListView):
-    queryset = MovieProxy.objects.all()
+    queryset = MovieProxy.objects.all().published()
     title = "Movies"
 
     # def get_context_data(self, *args, **kwargs):

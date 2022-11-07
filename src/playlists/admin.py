@@ -56,7 +56,7 @@ class TVShowSeasonProxyInline(admin.TabularInline):
 class TVShowProxyAdmin(admin.ModelAdmin):
     inlines = [TaggedItemInline, TVShowSeasonProxyInline]
     list_display = ["title"]
-    fields = ["order", "title", "category", "state"]
+    fields = ["order", "title", "category", "state", "publish_timestamp"]
 
     class Meta:
         model = Playlist
