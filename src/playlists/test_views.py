@@ -19,6 +19,7 @@ class PlaylistViewTestCase(TestCase):
 
     def test_movie_detail_view(self):
         movie = MovieProxy.objects.all().published().first()
+        print(movie)
         # pk = show.id
         url = movie.get_absolute_url()
         self.assertIsNotNone(url)
@@ -54,7 +55,7 @@ class PlaylistViewTestCase(TestCase):
         self.assertQuerysetEqual(
             movie.order_by("-timestamp"), obj_list.order_by("-timestamp")
         )
-
+    
     def test_show_list_view(self):
         shows = TVShowProxy.objects.all().published()
         url = "/tv-shows"
@@ -66,7 +67,7 @@ class PlaylistViewTestCase(TestCase):
         self.assertQuerysetEqual(
             shows.order_by("-timestamp"), obj_list.order_by("-timestamp")
         )
-
+    
     def test_search_results_view(self):
         query = "Action"
         response = self.client.get(f"/search/?q={query}")
