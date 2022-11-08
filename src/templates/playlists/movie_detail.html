@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load rating %}
 
 {% block head_title %}
 {% if title %}
@@ -15,13 +15,17 @@
 
 {% if title %}
 <h1>{{ title }}</h1>
-<h3> {{ object.title }}</h3>
-<!--<h3> {{ object.id }}</h3>-->
+<div class="">
+    {% rating  object=object %}
+</div>
+<div class="">
+    <h3> {{ object.title }}</h3>
+    <!--<h3> {{ object.id }}</h3>-->
 
-{% include 'videos/embed.html' with video_id=object.get_movie_id %}
-{% endif %}
+    {% include 'videos/embed.html' with video_id=object.get_movie_id %}
+    {% endif %}
 
-
+</div>
 
 
 

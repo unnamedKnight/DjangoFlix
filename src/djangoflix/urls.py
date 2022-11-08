@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
+from ratings.views import rate_object_view
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include('playlists.urls')),
     path("category/", include('categories.urls')),
     path("tags/", include('tags.urls')),
+    path('object-rate/', rate_object_view),
 ]
